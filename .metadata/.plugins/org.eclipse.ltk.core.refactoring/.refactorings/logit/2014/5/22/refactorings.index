@@ -1,0 +1,10 @@
+1401548672880	Delete elements
+1401548702819	Extracts string 'Vehicle Year' into R.string.vehicle_year
+1401548709603	Extracts string 'Add Vehicle' into R.string.add_vehicle
+1401548717265	Extracts string 'Cancel' into R.string.cancel
+1401548727952	Extracts string 'Vehicle Make' into R.string.vehicle_make
+1401548784676	Extracts string 'Password' into R.string.password
+1401548789784	Extracts string 'Log In' into R.string.log_in
+1401548795773	Extracts string 'Sign Up' into R.string.sign_up
+1401548931041	Extracts string 'Add New Vehicle' into R.string.add_new_vehicle
+1401548936490	Extracts string 'Logout' into R.string.logout

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">logit</string>
+    <string name="title_activity_vehicle">VehicleActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_log_in">LogInActivity</string>
+    <string name="title_activity_sign_up">SignUp</string>
+    <string name="title_activity_add_new_vehicle">AddNewVehicle</string>
+    <string name="title_activity_vehicle_details">VehicleDetails</string>
+    <string name="vehicle_year">Vehicle Year</string>
+    <string name="add_vehicle">Add Vehicle</string>
+    <string name="cancel">Cancel</string>
+    <string name="vehicle_make">Vehicle Make</string>
+    <string name="password">Password</string>
+
+</resources>

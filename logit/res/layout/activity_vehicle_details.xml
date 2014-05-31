@@ -1,0 +1,70 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${packageName}.${activityClass}" >
+
+    <TextView
+        android:id="@+id/makeStaticLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="34dp"
+        android:text="Make" />
+
+    <TextView
+        android:id="@+id/modelStaticLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/makeStaticLabel"
+        android:layout_below="@+id/makeStaticLabel"
+        android:layout_marginTop="24dp"
+        android:text="Model" />
+
+    <TextView
+        android:id="@+id/yearStaticLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/modelStaticLabel"
+        android:layout_below="@+id/modelStaticLabel"
+        android:layout_marginTop="32dp"
+        android:text="Year" />
+
+    <TextView
+        android:id="@+id/makeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/makeStaticLabel"
+        android:layout_centerHorizontal="true"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/modelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/modelStaticLabel"
+        android:layout_alignBottom="@+id/modelStaticLabel"
+        android:layout_alignLeft="@+id/makeText"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/yearText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/yearStaticLabel"
+        android:layout_alignBottom="@+id/yearStaticLabel"
+        android:layout_alignLeft="@+id/modelText"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/yearText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:text="Edit Vehicle" />
+
+</RelativeLayout>

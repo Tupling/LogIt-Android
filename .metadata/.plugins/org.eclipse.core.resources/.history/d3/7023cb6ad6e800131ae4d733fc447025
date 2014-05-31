@@ -1,0 +1,222 @@
+package com.daletupling.logit;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.daletupling.libs.NetworkStatus;
+import com.daletupling.libs.Storage;
+import com.daletupling.libs.VehicleData;
+import com.daletupling.libs.VehicleListAdapter;
+import com.daletupling.logit.R;
+import com.daletupling.logit.AddNewVehicle;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import android.support.v4.app.Fragment;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListView;
+import android.os.Build;
+
+public class VehicleActivity extends Activity {
+	// ListView Components
+	public ListView vehicle_list;
+	public ArrayList<VehicleData> vehicle_array;
+	public VehicleListAdapter list_adapter;
+	int arrayPos;
+
+	Context context;
+
+	Boolean connected = false;
+	private Timer methodTimer;
+	
+	// FileName
+	public static String FILENAME = "Vehicles";
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_vehicle);
+		setTitle("Vehicles");
+		context = this;
+		
+
+		methodTimer = new Timer();
+		methodTimer.schedule(new TimerTask() {			
+			@Override
+			public void run() {
+				loadData();
+			}
+			
+		}, 0, 15000);
+	
+
+		
+
+		vehicle_array = new ArrayList<VehicleData>();
+		vehicle_list = (ListView) findViewById(R.id.vehicle_list);
+
+		list_adapter = (new VehicleListAdapter(context, vehicle_array));
+		
+		vehicle_list.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				VehicleData vehicle = vehicle_array.get(position);
+				
+				Intent intent = new Intent(context, VehicleDetails.class);
+
+				Bundle bundle = new Bundle();
+				
+				
+				bundle.putString("vehicle_make", vehicle.getMake());
+				bundle.putString("vehicle_model", vehicle.getModel());
+				bundle.putString("vehicle_year", vehicle.getYear().toString());
+				bundle.putString("vehicle_id", vehicle.getObjectId());
+				intent.putExtras(bundle);
+				startActivityForResult(intent, position);
+				
+			}
+			
+		});
+		
+		//OnItemLongClick Delete Functionality
+		vehicle_list.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                    int pos, long id) {
+            	
+            	arrayPos = pos;
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setMessage("Delete Vehicle")
+                       .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                           public void onClick(DialogInterface dialog, int id) {
+                        	   
+                           	VehicleData vehicle = vehicle_array.get(arrayPos);
+                        	ParseObject.createWithoutData("Vehicles", vehicle.getObjectId()).deleteInBackground();
+                        	vehicle_array.remove(arrayPos);
+                        	list_adapter.notifyDataSetChanged();
+                           }
+                       })
+                       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                           public void onClick(DialogInterface dialog, int id) {
+
+                           }
+                       });
+                // Create the AlertDialog object and return it
+                alert.show();
+                return true;
+            }
+
+        }); 
+	}
+
+	public void loadData() {
+		//Check Connection
+		connected = NetworkStatus.getStatus(context);
+		if (connected) {
+			vehicle_array.removeAll(vehicle_array);
+			//Check current user
+			ParseUser currentUser = ParseUser.getCurrentUser();
+			if (currentUser != null) {
+				//Load Data
+				ParseQuery<ParseObject> parseQuery = ParseQuery
+						.getQuery("Vehicles");
+				parseQuery.findInBackground(new FindCallback<ParseObject>() {
+					public void done(List<ParseObject> objects, ParseException e) {
+						if (e == null) {
+
+							for (int i = 0; i < objects.size(); i++) {
+								Object vehicle_object = objects.get(i);
+								// Create new workout built from parse data
+								VehicleData vehicle = new VehicleData();
+
+								String vehicleMake = ((ParseObject) vehicle_object)
+										.getString("make").toString();
+								String vehicleModel = ((ParseObject) vehicle_object)
+										.getString("model").toString();
+								Number vehicleYear = ((ParseObject) vehicle_object)
+										.getNumber("year");
+								String vehicleObjectId = ((ParseObject) vehicle_object)
+										.getObjectId();
+
+								// Set data content of Workout Data
+								vehicle.setMake(vehicleMake);
+								vehicle.setModel(vehicleModel);
+								vehicle.setYear(vehicleYear);
+								vehicle.setObjectId(vehicleObjectId);
+
+								// Place workout into workout array
+								vehicle_array.add(vehicle);
+
+							}
+
+							if (list_adapter != null) {
+
+								vehicle_list.setAdapter(list_adapter);
+
+							} else {
+								// TODO Notify User of Error
+							}
+
+						} else {
+							// TODO Notify User of Error
+						}
+					}
+
+				});
+			} else {
+				finish();
+			}
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		getMenuInflater().inflate(R.menu.vehicle, menu);
+		return true;
+
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Switch case for ActionBar
+		switch (item.getItemId()) {
+
+		case R.id.new_vehicle:
+			Intent i = new Intent(this, AddNewVehicle.class);
+			this.startActivity(i);
+
+		case R.id.user_logout:
+			ParseUser.logOut();
+			finish();
+			return true;
+
+		}// SWITCH closing
+		return super.onOptionsItemSelected(item);
+	}// OPTIONS closing
+
+}
