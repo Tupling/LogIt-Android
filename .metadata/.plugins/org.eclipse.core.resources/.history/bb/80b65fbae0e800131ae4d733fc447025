@@ -48,8 +48,8 @@ public class AddNewVehicle extends Activity {
 			public void onClick(View v) {
 				Bundle bundle = getIntent().getExtras();
 				if (bundle != null) {
-					
-					ParseQuery<ParseObject> query = ParseQuery.getQuery("Vehicles");
+					ParseQuery<ParseObject> query = ParseQuery
+							.getQuery("Vehicles");
 					Log.d("Vehicle ID =", vObjectId);
 					// Retrieve the object by id
 					query.getInBackground(vObjectId,
@@ -57,6 +57,11 @@ public class AddNewVehicle extends Activity {
 								public void done(ParseObject vehicle,
 										ParseException e) {
 									if (e == null) {
+										// Now let's update it with some new
+										// data. In this case, only cheatMode
+										// and score
+										// will get sent to the Parse Cloud.
+										// playerName hasn't changed.
 
 										int vehicleYearNumber = Integer
 												.parseInt(vYear);

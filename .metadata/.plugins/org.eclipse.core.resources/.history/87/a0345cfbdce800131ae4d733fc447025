@@ -54,7 +54,6 @@ public class VehicleDetails extends Activity {
 				bundle.putString("vehicle_year", vehicleYear.getText().toString());
 				bundle.putString("vehicle_id", vObjectId);
 				intent.putExtras(bundle);
-				startActivity(intent);
 			}
 			
 		});

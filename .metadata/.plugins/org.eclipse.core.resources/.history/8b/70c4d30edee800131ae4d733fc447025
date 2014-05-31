@@ -2,17 +2,14 @@ package com.daletupling.logit;
 
 import com.daletupling.libs.VehicleData;
 import com.parse.GetCallback;
-import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,53 +45,44 @@ public class AddNewVehicle extends Activity {
 			public void onClick(View v) {
 				Bundle bundle = getIntent().getExtras();
 				if (bundle != null) {
-					
 					ParseQuery<ParseObject> query = ParseQuery.getQuery("Vehicles");
-					Log.d("Vehicle ID =", vObjectId);
+					 
 					// Retrieve the object by id
-					query.getInBackground(vObjectId,
-							new GetCallback<ParseObject>() {
-								public void done(ParseObject vehicle,
-										ParseException e) {
-									if (e == null) {
+					query.getInBackground(vObjectId, new GetCallback<ParseObject>() {
+					  public void done(ParseObject vehicle, ParseException e) {
+					    if (e == null) {
+					      // Now let's update it with some new data. In this case, only cheatMode and score
+					      // will get sent to the Parse Cloud. playerName hasn't changed.
+					    	
+					    	int vehicleYearNumber = Integer.parseInt(vYear);
+					      vehicle.put("make", vMake);
+					      vehicle.put("model", vModel);
+					      vehicle.put("year", vehicleYearNumber);
+					      vehicle.saveInBackground();
+					    }
+					  }
 
-										int vehicleYearNumber = Integer
-												.parseInt(vYear);
-										vehicle.put("make", vMake);
-										vehicle.put("model", vModel);
-										vehicle.put("year", vehicleYearNumber);
-										vehicle.saveInBackground();
-										
-										Intent returnIntent = new Intent();
-										returnIntent.setClass(context, VehicleActivity.class);
-										startActivity(returnIntent);
-										AddNewVehicle.this.finish();
-									}
-								}
-
-							});
-				} else {
-					String vMakeString = vehicleMake.getText().toString();
-					String vModelString = vehicleModel.getText().toString();
-
-					int vehicleYearInt = Integer.parseInt(vehicleYear.getText()
-							.toString());
-					Number vehilceYearN = (Number) vehicleYearInt;
-
-					ParseObject vehicle = new ParseObject("Vehicles");
-					vehicle.put("make", vMakeString);
-					vehicle.put("model", vModelString);
-					vehicle.put("year", vehicleYearInt);
-					vehicle.setACL(new ParseACL(ParseUser.getCurrentUser()));
-
-					vehicle.saveInBackground();
-
-					Intent returnIntent = new Intent();
-					returnIntent.setClass(context, VehicleActivity.class);
-					startActivity(returnIntent);
-					AddNewVehicle.this.finish();
-
+					});
 				}
+				String vMakeString = vehicleMake.getText().toString();
+				String vModelString = vehicleModel.getText().toString();
+
+				int vehicleYearInt = Integer.parseInt(vehicleYear.getText()
+						.toString());
+				Number vehilceYearN = (Number) vehicleYearInt;
+
+				ParseObject vehicle = new ParseObject("Vehicles");
+				vehicle.put("make", vMakeString);
+				vehicle.put("model", vModelString);
+				vehicle.put("year", vehicleYearInt);
+
+				vehicle.saveInBackground();
+
+				Intent returnIntent = new Intent();
+				returnIntent.setClass(context, VehicleActivity.class);
+				startActivity(returnIntent);
+				AddNewVehicle.this.finish();
+
 			}
 
 		});
@@ -108,7 +96,7 @@ public class AddNewVehicle extends Activity {
 			}
 
 		});
-
+		
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			// Data Variables
@@ -116,9 +104,9 @@ public class AddNewVehicle extends Activity {
 			vModel = bundle.getString("vehicle_model");
 			vYear = bundle.getString("vehicle_year");
 			vObjectId = bundle.getString("vehicle_id");
-
+			
 			setTitle(vMake);
-
+			
 			vehicleMake.setText(vMake);
 			vehicleModel.setText(vModel);
 			vehicleYear.setText(vYear);

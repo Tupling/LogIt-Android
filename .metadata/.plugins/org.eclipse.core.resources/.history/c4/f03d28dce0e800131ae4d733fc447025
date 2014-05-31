@@ -63,7 +63,7 @@ public class AddNewVehicle extends Activity {
 										vehicle.put("make", vMake);
 										vehicle.put("model", vModel);
 										vehicle.put("year", vehicleYearNumber);
-										vehicle.saveInBackground();
+										vehicle.save();
 										
 										Intent returnIntent = new Intent();
 										returnIntent.setClass(context, VehicleActivity.class);

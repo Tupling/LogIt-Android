@@ -44,35 +44,39 @@ public class AddNewVehicle extends Activity {
 
 		addVehicle.setOnClickListener(new OnClickListener() {
 
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			public void onClick(View v) {
 				Bundle bundle = getIntent().getExtras();
 				if (bundle != null) {
-					
-					ParseQuery<ParseObject> query = ParseQuery.getQuery("Vehicles");
-					Log.d("Vehicle ID =", vObjectId);
-					// Retrieve the object by id
-					query.getInBackground(vObjectId,
-							new GetCallback<ParseObject>() {
-								public void done(ParseObject vehicle,
-										ParseException e) {
-									if (e == null) {
+					@SuppressWarnings("rawtypes")
+					ParseQuery query = new ParseQuery("Vehicle");
+					query.getInBackground(vObjectId, new GetCallback() {
+						public void done(final ParseObject vehicle,
+								ParseException e) {
+							if (e == null) {
 
-										int vehicleYearNumber = Integer
-												.parseInt(vYear);
-										vehicle.put("make", vMake);
-										vehicle.put("model", vModel);
-										vehicle.put("year", vehicleYearNumber);
-										vehicle.saveInBackground();
-										
-										Intent returnIntent = new Intent();
-										returnIntent.setClass(context, VehicleActivity.class);
-										startActivity(returnIntent);
-										AddNewVehicle.this.finish();
-									}
-								}
+								int vehicleYearNumber = Integer.parseInt(vYear);
+								vehicle.put("make", vMake);
+								vehicle.put("model", vModel);
+								vehicle.put("year", vehicleYearNumber);
+								vehicle.saveInBackground();
 
-							});
+								Intent returnIntent = new Intent();
+								returnIntent.setClass(context,
+										VehicleActivity.class);
+								startActivity(returnIntent);
+								AddNewVehicle.this.finish();
+
+							}
+
+							else {
+								e.printStackTrace();
+							}
+
+						}
+					});
+
 				} else {
 					String vMakeString = vehicleMake.getText().toString();
 					String vModelString = vehicleModel.getText().toString();

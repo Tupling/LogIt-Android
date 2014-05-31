@@ -44,7 +44,7 @@ public class VehicleDetails extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(context, AddNewVehicle.class);
+				Intent intent = new Intent(context, VehicleDetails.class);
 
 				Bundle bundle = new Bundle();
 				
@@ -54,7 +54,6 @@ public class VehicleDetails extends Activity {
 				bundle.putString("vehicle_year", vehicleYear.getText().toString());
 				bundle.putString("vehicle_id", vObjectId);
 				intent.putExtras(bundle);
-				startActivity(intent);
 			}
 			
 		});
